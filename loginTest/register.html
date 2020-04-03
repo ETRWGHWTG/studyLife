@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>注册页面</title>
+	<!-- 新 Bootstrap 核心 CSS 文件 -->
+	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- 二维码框架-->
+	<script type="text/javascript" src="https://cdn.staticfile.org/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-default" role="navigation"> 
+    <div class="container-fluid"> 
+        <div class="navbar-header"> 
+            <a class="navbar-brand" href="index.html">福临购物</a>
+        </div> 
+        <ul class="nav navbar-nav navbar-right"> 
+            <li><a href="register.html"><span class="glyphicon glyphicon-user"></span> 注册</a></li> 
+            <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li> 
+        </ul> 
+    </div>
+</nav>
+<div>
+	<form class="form-horizontal" role="form">
+	  <div class="form-group">
+	    <label for="firstname" class="col-sm-offset-2 col-sm-3 control-label">输入用户名</label>
+	    <div class="col-sm-3">
+	      <input type="text" class="form-control" id="name" placeholder="请输入用户名">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="lastname" class="col-sm-offset-2 col-sm-3 control-label">输入密码</label>
+	    <div class="col-sm-3">
+	      <input type="text" class="form-control" id="firstpwd" placeholder="请输入密码">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="lastname" class="col-sm-offset-2 col-sm-3 control-label">确认密码</label>
+	    <div class="col-sm-3">
+	      <input type="text" class="form-control" id="lastpwd" placeholder="请确认密码">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <div class="col-sm-offset-5 col-sm-10">
+	      <button type="submit" class="btn btn-default">注册</button>
+	    </div>
+	  </div>
+	</form>
+</div>
+</body>
+</html>
