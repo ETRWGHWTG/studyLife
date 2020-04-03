@@ -1,0 +1,15 @@
+本地传文件到github(gitee码云)
+git安装 sudo apt install git
+设置账户名密码   git configure --global user.name"  "
+                 git configure --global user.email"  "
+检查  git config --list
+初始化本地git仓库 git init
+查看本地目录信息  git status
+将本地仓库与码云远程仓库连接起来 git remote add origin https://gitee.com/xxx/xxx.git
+更新一下项目，确保和远程仓库没有冲突 git pull --rebase origin master
+添加目录下所有改变文件 git add .
+提交 git commit -m "注释信息"
+推上码云 git push -u origin master
+删除origin git remote rm origin
+
+克隆项目 git clone https.........
