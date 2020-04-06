@@ -1,0 +1,41 @@
+问题：nodejs是异步处理的。前端触发某个请求，想要查询数据库并且返回这个值，但是无论如何都返回不回来，因为没等到查询完毕，就过早的将空数据返回回来了。
+解决：async/await 配合 promise 使用
+async  function select(id,pwd,type){
+  	if(type=="id"){
+	  	var selectSql = "select fl_pwd from fl_user where fl_id=?";
+	}else if(type=="name"){
+		var selectSql = "select fl_pwd from fl_user where fl_name=?";
+	}
+	var selectParames = [id];
+	var result = await new Promise((resolve,reject)=>{
+		pool.getConnection(function(err, connection){
+	  	if(err){
+	  		console.log(err);
+	  	}else{
+		  	connection.query(selectSql,selectParames,function(err, rows){
+		  	if(err)	{
+		  		throw err;
+		  	}else{
+		  		console.log( rows );
+		  		if(rows.length == 0){
+		  			console.log("用户不存在!");
+		  			resolve ("undefined");
+		  		}else if(rows[0].fl_pwd!=pwd){
+		  			console.log("密码错误");
+		  			resolve ("error");
+		  		}else{
+		  			console.log(rows[0].fl_pwd);
+		  			console.log("登录成功");
+		  			resolve ("success");
+		  		}
+		  	}
+		  });
+		}
+	  pool.releaseConnection(connection);
+	});
+	})
+	  return result;
+}
+db.select("abcd","123456","name").then(result=>{
+	console.log(result);
+})
