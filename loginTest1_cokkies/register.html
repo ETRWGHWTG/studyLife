@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>注册页面</title>
+	<!-- 新 Bootstrap 核心 CSS 文件 -->
+	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<!-- validate框架-->
+	<script src="https://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+
+	<link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- 二维码框架-->
+	<script type="text/javascript" src="https://cdn.staticfile.org/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+	<style type="text/css">
+		#error{
+			 text-align:center
+		}
+	</style>
+	<script type="text/javascript">
+		$(function () {
+            $("#form1").bootstrapValidator({
+            	//live:"disabled",
+                //live: ['submitted','enabled'],//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证
+                excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的
+                //submitButtons: 'btn',//指定提交按钮，如果验证失败则变成disabled，但我没试成功，反而加了这句话非submit按钮也会提交到action指定页面
+                message: '通用的验证失败消息',//好像从来没出现过
+                feedbackIcons: {//根据验证结果显示的各种图标
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    user_name: {
+                        validators: {
+                            notEmpty: {//检测非空,radio也可用
+                                message: '账号不能为空'
+                            },
+                            stringLength: {//检测长度
+                                min: 3,
+                                max: 10,
+                                message: '长度必须在3-10之间'
+                            }
+                            /*regexp: {//正则验证
+                                regexp: /^[a-zA-Z0-9_\.]+$/,
+                                message: '所输入的字符不符要求'
+                            },
+                            remote: {//将内容发送至指定页面验证，返回验证结果，比如查询用户名是否存在
+                                url: '指定页面',
+                                message: 'The username is not available'
+                            },
+                            different: {//与指定文本框比较内容相同
+                                field: '指定文本框name',
+                                message: '不能与指定文本框内容相同'
+                            },
+                            emailAddress: {//验证email地址
+                                message: '不是正确的email地址'
+                            },
+                            identical: {//与指定控件内容比较是否相同，比如两次密码不一致
+                                field: 'confirmPassword',//指定控件name
+                                message: '输入的内容不一致'
+                            },
+                            date: {//验证指定的日期格式
+                                format: 'YYYY/MM/DD',
+                                message: '日期格式不正确'
+                            },
+                            choice: {//check控件选择的数量
+                                min: 2,
+                                max: 4,
+                                message: '必须选择2-4个选项'
+                            }*/
+                        }
+                    },
+                    pwd1: {
+                        validators: {
+                            notEmpty: {//检测非空,radio也可用
+                                message: '密码不能为空'
+                            },
+                            stringLength: {//检测长度
+                                min: 6,
+                                max: 20,
+                                message: '长度必须在6-20之间'
+                            },
+                            regexp: {//正则验证
+                                regexp: /^[a-zA-Z0-9_\.]+$/,
+                                message: '所输入的字符不符要求'
+                            },
+                            /*identical: {
+                            	field: 'pwd2',
+                                message: '两次输入密码不同'
+                            },*/
+                            different: {//与指定文本框比较内容相同
+                                field: 'user_name',
+                                message: '密码不能与用户名相同'
+                            }
+                        }
+                    },
+                    pwd2: {
+                        validators: {
+                            notEmpty: {//检测非空,radio也可用
+                                message: '确认密码不能为空'
+                            },
+                            stringLength: {//检测长度
+                                min: 6,
+                                max: 20,
+                                message: '长度必须在6-20之间'
+                            },
+                            regexp: {//正则验证
+                                regexp: /^[a-zA-Z0-9_\.]+$/,
+                                message: '所输入的字符不符要求'
+                            },
+                            trigger:"getCharge",
+                            identical: {
+                            	field: 'pwd1',
+                                message: '两次输入密码不同'
+                            }
+                        }
+                    }
+                }
+            });
+            $("#btn").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证
+            	$('#form1').data("bootstrapValidator").resetForm();//重置表单所有验证规则，下一步再触发验证
+        		$("#form1").data("bootstrapValidator").validate();//手动触发全部验证
+                $("#form1").bootstrapValidator('validate');//提交验证
+                if ($("#form1").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
+                    //alert("yes");//验证成功后的操作，如ajax
+                    login();
+                }
+            });
+        });
+		function login() {
+            $.ajax({
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "http://localhost:8081/register_post" ,//url
+                data: $('#form1').serialize(),
+                success: function (result) {
+                    console.log(result);//打印服务端返回的数据(调试用)
+                    var status = result.status;
+                    console.log(status);
+                    if(status=="注册成功"){
+                    	var print=status+"用户编号:"+result.uid;
+                    document.getElementById("p1").innerHTML=print;
+                }else if(status=="用户名已存在"){
+                	document.getElementById("p1").innerHTML=status;
+                }else{
+                	document.getElementById("p1").innerHTML=status;
+                }
+                },
+                error : function() {
+                    alert("异常！");
+                }
+            });
+        }
+        function charge(){
+        	/*$('#form1').data("bootstrapValidator").resetForm();//重置表单所有验证规则，下一步再触发验证
+        	$("#form1").data("bootstrapValidator").validate();//手动触发全部验证
+            $("#form1").bootstrapValidator('validate');//提交验证*/
+            //$("#lastpwd").getCharge();
+            //重置表单单一验证规则，下一步再触发验证
+            $('#form1').data("bootstrapValidator").resetField("pwd2");
+            $("#form1").data("bootstrapValidator").validateField('pwd2');
+        }
+	</script>
+</head>
+<body>
+	<nav class="navbar navbar-default" role="navigation"> 
+    <div class="container-fluid"> 
+        <div class="navbar-header"> 
+            <a class="navbar-brand" href="index.html">福临购物</a>
+        </div> 
+        <ul class="nav navbar-nav navbar-right"> 
+            <li id="user_account" style="display:none"><a href="#"><span class="glyphicon glyphicon-user"></span><span id="user_login"></span></a></li>
+            <li id="account_zuce"><a href="register.html"><span class="glyphicon glyphicon-user"></span> 注册</a></li> 
+            <li id="account_denglu"><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li> 
+        </ul> 
+    </div>
+</nav>
+<div id="error">
+	<p id="p1"></p>
+</div>
+<div>
+	<form id="form1" onkeydown="if(event.keyCode==13)return false;" class="form-horizontal" role="form" method="POST">
+	  <div class="form-group">
+	    <label for="firstname" class="col-sm-offset-2 col-sm-3 control-label">输入用户名</label>
+	    <div class="col-sm-3">
+	      <input type="text" class="form-control" name="user_name" id="name" placeholder="请输入用户名">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="lastname" class="col-sm-offset-2 col-sm-3 control-label">输入密码</label>
+	    <div class="col-sm-3">
+	      <input type="password" class="form-control" name="pwd1" id="firstpwd" placeholder="请输入密码" onchange="charge()">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="lastname" class="col-sm-offset-2 col-sm-3 control-label">确认密码</label>
+	    <div class="col-sm-3">
+	      <input type="password" class="form-control" name="pwd2" id="lastpwd" placeholder="请确认密码">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <div class="col-sm-offset-5 col-sm-10">
+	      <input type="button" name="btn" id="btn" class="btn btn-default"value="注册"></input>
+	    </div>
+	  </div>
+	</form>
+</div>
+<script type="text/javascript">
+    $.ajax({
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "http://localhost:8081/login_post" ,//url
+                data: $('#form1').serialize(),
+                success: function (result) {
+                    if(result.cokkies){
+                    $("#account_denglu").hide();
+                    $("#account_zuce").hide();
+                    $("#user_account").show();
+                    document.getElementById("user_login").innerHTML="  "+result.user;
+                }
+                },
+                error : function() {
+                    alert("异常！");
+                }
+            });
+</script>
+</body>
+</html>

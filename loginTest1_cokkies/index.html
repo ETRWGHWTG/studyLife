@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<title>福临网</title>
+	<!-- 新 Bootstrap 核心 CSS 文件 -->
+	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- 二维码框架-->
+	<script type="text/javascript" src="https://cdn.staticfile.org/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+	<!--jq的cookies库 -->
+	<script type="text/javascript" src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#exit").click(function(){
+				console.log("退出登录");
+				$.removeCookie('user');
+				setTimeout(location.reload(),3000);
+			});
+		});
+	</script>
+</head>
+<body>
+	<nav class="navbar navbar-default" role="navigation"> 
+    <div class="container-fluid"> 
+        <div class="navbar-header"> 
+            <a class="navbar-brand" href="index.html">福临购物</a>
+        </div> 
+        <ul class="nav navbar-nav navbar-right"> 
+        	<li class="dropdown" id="user_account" style="display:none"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><span id="user_login"></span></a>
+        		<ul class="dropdown-menu">
+                    <li><a href="#" id="exit">退出登录</a></li>
+                </ul>
+        	</li>
+            <li id="account_zuce"><a href="register.html"><span class="glyphicon glyphicon-user"></span> 注册</a></li> 
+            <li id="account_denglu"><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li> 
+        </ul> 
+    </div> 
+</nav>
+<script type="text/javascript">
+    $.ajax({
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "http://localhost:8081/login_post" ,//url
+                data: $('#form1').serialize(),
+                success: function (result) {
+                    if(result.cokkies){
+                    $("#account_denglu").hide();
+                    $("#account_zuce").hide();
+                    $("#user_account").show();
+                    document.getElementById("user_login").innerHTML="  "+result.user;
+                }
+                },
+                error : function() {
+                    alert("异常！");
+                }
+            });
+</script>
+</body>
+</html>
